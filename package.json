@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@solana/web3.js": "^1.78.7",
+    "axios": "^1.5.1"
+  }
+}
