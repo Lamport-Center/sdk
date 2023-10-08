@@ -1,6 +1,17 @@
 {
+  "name": "@lamport-center/sdk",
+  "version": "1.0.0",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
   "dependencies": {
     "@solana/web3.js": "^1.78.7",
     "axios": "^1.5.1"
+  },
+  "devDependencies": {
+    "tsc": "^2.0.4",
+    "typescript": "^5.2.2"
   }
 }
