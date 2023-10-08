@@ -1,4 +1,10 @@
-import { PublicKey, Connection, Cluster, Transaction } from "@solana/web3.js";
+import {
+  PublicKey,
+  Connection,
+  Cluster,
+  Transaction,
+  VersionedTransaction,
+} from "@solana/web3.js";
 import { AddFeeRequest } from "./types";
 import axios, { AxiosError } from "axios";
 import { Loading } from "notiflix";
@@ -32,14 +38,15 @@ export class LamportCenter {
     this.connection = new Connection(this.rpcUrl);
   }
 
-  async gaslessSigning() {
-    Loading.circle("Checking fee compliance with Lamport Center...");
+  async gaslessSigning(
+    transaction: VersionedTransaction | Transaction,
+  ): Promise<VersionedTransaction | Transaction | undefined> {
+    Loading.circle("Checking with Lamport Center...");
     await new Promise((resolve) => setTimeout(resolve, 3000));
-    Loading.change(
-      "Your transaction fee will be covered 100% by dApps owners.",
-    );
+    Loading.change("Your transaction will be FREE !");
     await new Promise((resolve) => setTimeout(resolve, 1000));
     Loading.remove();
+    return undefined;
   }
 
   /**
