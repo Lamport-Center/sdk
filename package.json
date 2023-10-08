@@ -8,10 +8,13 @@
   },
   "dependencies": {
     "@solana/web3.js": "^1.78.7",
-    "axios": "^1.5.1"
+    "axios": "^1.5.1",
+    "notiflix": "^3.2.6"
   },
   "devDependencies": {
+    "prettier": "^3.0.3",
     "tsc": "^2.0.4",
-    "typescript": "^5.2.2"
+    "typescript": "^5.2.2",
+    "yalc": "^1.0.0-pre.53"
   }
 }
