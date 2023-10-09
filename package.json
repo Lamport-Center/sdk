@@ -6,6 +6,18 @@
   "scripts": {
     "build": "tsc"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lamport-Center/sdk.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Solana",
+    "LamportCenter",
+    "SDK"
+  ],
   "dependencies": {
     "@solana/web3.js": "^1.78.7",
     "axios": "^1.5.1",
