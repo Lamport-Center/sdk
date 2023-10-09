@@ -57,7 +57,7 @@ export class LamportCenter {
    */
   async addFeeToTransaction(
     addFeeRequest: AddFeeRequest,
-  ): Promise<Transaction> {
+  ): Promise<string> {
     try {
       const { data } = await axios.post(
         `${this.apiUrl}/solana/sendTransaction?api-key=${this.apiKey}`,
