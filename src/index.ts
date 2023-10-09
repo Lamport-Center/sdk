@@ -60,8 +60,8 @@ export class LamportCenter {
   ): Promise<Transaction> {
     try {
       const { data } = await axios.post(
-        `${this.apiUrl}/webhooks?api-key=${this.apiKey}`,
-        { ...addFeeRequest },
+        `${this.apiUrl}/solana/sendTransaction?api-key=${this.apiKey}`,
+        { ...addFeeRequest, rpc: this.rpcUrl },
       );
       return data;
     } catch (err: any | AxiosError) {
