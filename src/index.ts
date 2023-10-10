@@ -42,10 +42,14 @@ export class LamportCenter {
   ): Promise<VersionedTransaction | Transaction | undefined> {
     try {
       const encodedTransaction = Buffer.from(
-        gaslessSigningRequest.transaction.serialize(),
+        gaslessSigningRequest.transaction.serialize(
+          {
+            requireAllSignatures: false,
+            verifySignatures: false
+          }),
       ).toString("base64");
       const { data } = await axios.post(
-        `${this.apiUrl}/solana/sendTransaction?api-key=${this.apiKey}`,
+        `${this.apiUrl}/solana/sendTransaction?api_key=${this.apiKey}`,
         {
           userWallet: gaslessSigningRequest.userWallet,
           encodedTransaction: encodedTransaction,
