@@ -65,6 +65,5 @@ export class LamportCenter {
         throw new Error(`error during gaslessSigning: ${err}`);
       }
     }
-    return undefined;
   }
 }
