@@ -1,13 +1,6 @@
-import {
-  PublicKey,
-  Connection,
-  Cluster,
-  Transaction,
-  VersionedTransaction,
-} from "@solana/web3.js";
-import { AddFeeRequest } from "./types";
+import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
+import { GaslessSigningRequest } from "./types";
 import axios, { AxiosError } from "axios";
-import { Loading } from "notiflix";
 import { lamportCenterAPI } from "./utils/apiUrl";
 
 export class LamportCenter {
@@ -38,42 +31,40 @@ export class LamportCenter {
     this.connection = new Connection(this.rpcUrl);
   }
 
-  async gaslessSigning(
-    transaction: VersionedTransaction | Transaction,
-  ): Promise<VersionedTransaction | Transaction | undefined> {
-    Loading.circle("Checking with Lamport Center...");
-    await new Promise((resolve) => setTimeout(resolve, 3000));
-    Loading.change("Your transaction will be FREE !");
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    Loading.remove();
-    return undefined;
-  }
-
   /**
    * Add fee to user's transaction
-   * @param {AddFeeRequest} addFeeRequest - the request object containing the transaction information
-   * @returns {Promise<Transaction>} a promise that resolves to the transaction object
+   * @param {gaslessSigningRequest} gaslessRequest - the request object containing the transaction information
+   * @returns {Promise<VersionedTransaction | Transaction | undefined>} a promise that resolves to the transaction object
    * @throws {Error} if there is an error calling if the response contains an error
    */
-  async addFeeToTransaction(
-    addFeeRequest: AddFeeRequest,
-  ): Promise<string> {
+  async gaslessSigning(
+    gaslessSigningRequest: GaslessSigningRequest,
+  ): Promise<VersionedTransaction | Transaction | undefined> {
     try {
+      const encodedTransaction = Buffer.from(
+        gaslessSigningRequest.transaction.serialize(),
+      ).toString("base64");
       const { data } = await axios.post(
         `${this.apiUrl}/solana/sendTransaction?api-key=${this.apiKey}`,
-        { ...addFeeRequest, rpc: this.rpcUrl },
+        {
+          userWallet: gaslessSigningRequest.userWallet,
+          encodedTransaction: encodedTransaction,
+          rpc: this.rpcUrl,
+        },
       );
-      return data;
+      const sponsorTransaction = VersionedTransaction.deserialize(
+        Buffer.from(data, "base64"),
+      );
+      return sponsorTransaction;
     } catch (err: any | AxiosError) {
       if (axios.isAxiosError(err)) {
         throw new Error(
-          `error during addFeeToTransaction: ${
-            err.response?.data.error || err
-          }`,
+          `error during gaslessSigning: ${err.response?.data.error || err}`,
         );
       } else {
-        throw new Error(`error during addFeeToTransaction: ${err}`);
+        throw new Error(`error during gaslessSigning: ${err}`);
       }
     }
+    return undefined;
   }
 }

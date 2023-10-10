@@ -1,6 +1,6 @@
-import {Transaction} from "@solana/web3.js";
+import {Transaction, VersionedTransaction} from "@solana/web3.js";
 
-export interface AddFeeRequest {
+export interface GaslessSigningRequest {
     userWallet: string,
-    encodedTransaction: string,
+    transaction: VersionedTransaction | Transaction,
 }
