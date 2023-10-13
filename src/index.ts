@@ -1,6 +1,5 @@
 import { Connection, Transaction, VersionedTransaction } from "@solana/web3.js";
 import { GaslessSigningRequest } from "./types";
-import axios, { AxiosError } from "axios";
 import { lamportCenterAPI } from "./utils/apiUrl";
 
 export class LamportCenter {
@@ -48,26 +47,29 @@ export class LamportCenter {
             verifySignatures: false
           }),
       ).toString("base64");
-      const { data } = await axios.post(
-        `${this.apiUrl}/solana/sendTransaction?api_key=${this.apiKey}`,
-        {
+
+      const rawResponse = await fetch(`${this.apiUrl}/solana/sendTransaction?api_key=${this.apiKey}`, {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
           userWallet: gaslessSigningRequest.userWallet,
           encodedTransaction: encodedTransaction,
           rpc: this.rpcUrl,
-        },
-      );
+        },)
+      });
+
+      const data = await rawResponse.json();
+
       const sponsorTransaction = VersionedTransaction.deserialize(
         Buffer.from(data, "base64"),
       );
       return sponsorTransaction;
-    } catch (err: any | AxiosError) {
-      if (axios.isAxiosError(err)) {
-        throw new Error(
-          `error during gaslessSigning: ${err.response?.data.error || err}`,
-        );
-      } else {
-        throw new Error(`error during gaslessSigning: ${err}`);
-      }
+    } catch (err: any) {
+      throw new Error(`error during gaslessSigning: ${err}`);
     }
   }
 }
+
